@@ -1,6 +1,7 @@
-# generic_widget
+# flutter_basic_essentials
 
-A new Flutter package project.
+This Flutter package project is for basic widgets and with some
+  basic network funtionalities.
 
 ## Getting Started
 
@@ -12,4 +13,4 @@ multiple Flutter or Dart projects.
 For help getting started with Flutter, view our 
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
-# flutter_basic_essentials
+
