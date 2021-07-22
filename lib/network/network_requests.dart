@@ -3,13 +3,7 @@ import 'dart:io';
 import 'package:meta/meta.dart';
 import 'package:flutter_basic_essentials/network/network.dart';
 
-///[NetworkRequestsAbstact] required "HttpClient" as client, "String" baseUrl
-///additional variable "int" port, "String" additionalUrl,
-/// "bool" isBadCertificate (default "false",
-/// switch it "true" if server is not HTTPS / certificate is not good / not installed)
-///
-
-abstract class NetworkRequestsAbstact {
+abstract class NetworkRequests {
   Future<String> getRequest(
       {@required String url,
       @required Map<String, String> headers,
@@ -24,9 +18,19 @@ abstract class NetworkRequestsAbstact {
       @required String body,
       @required Map<String, String> headers,
       bool isDirectUrl = false});
+  Future<String> deleteRequest(
+      {@required String url,
+      @required String body,
+      @required Map<String, String> headers,
+      bool isDirectUrl = false});
 }
 
-class NetworkRequests implements NetworkRequestsAbstact {
+///[NetworkRequestsImplement] required "[HttpClient]" as client, "[String]" baseUrl
+///additional parameters "[int]" port, "[String]" additionalUrl,
+/// "[bool]" isBadCertificate (default "[false]",
+/// switch it "[true]" if server is not HTTPS / certificate is not good / not installed)
+///
+class NetworkRequestsImplement implements NetworkRequests {
   final String? baseUrl;
   final int? port;
   final String? additionalUrl;
@@ -35,14 +39,14 @@ class NetworkRequests implements NetworkRequestsAbstact {
 
   String _tag = "Flutter Network Requests: ";
 
-  NetworkRequests(
+  NetworkRequestsImplement(
       {@required this.client,
       @required this.baseUrl,
       this.port,
       this.additionalUrl = "",
       this.isBadCertificate = false})
       : assert(client != null && baseUrl != null,
-            'A non-null values must be provided to the NetworkRequests class') {
+            'A non-null values must be provided to the NetworkRequestsImplement class') {
     if (isBadCertificate) {
       client?.badCertificateCallback =
           ((X509Certificate cert, String host, int port) => true);
@@ -69,7 +73,7 @@ class NetworkRequests implements NetworkRequestsAbstact {
   ///[getRequest] required "String" url, "Map<String, String>" headers,
   /// "bool" isDirectUrl (default "false",
   /// switch it "true" if url is direct url like as "https://www.google.com"
-  /// if "false" url will be append as initial "baseUrl" in [NetworkRequests])
+  /// if "false" url will be append as initial "baseUrl" in [NetworkRequestsImplement])
   ///
   /// return response as "String"
   @override
@@ -98,7 +102,7 @@ class NetworkRequests implements NetworkRequestsAbstact {
   ///[postRequest] required "String" url, "Map<String, String>" headers, "String" body
   /// "bool" isDirectUrl (default "false",
   /// switch it "true" if url is direct url like as "https://www.google.com"
-  /// if "false" url will be append as initial "baseUrl" in [NetworkRequests])
+  /// if "false" url will be append as initial "baseUrl" in [NetworkRequestsImplement])
   ///
   /// return response as "String"
   @override
@@ -129,7 +133,7 @@ class NetworkRequests implements NetworkRequestsAbstact {
   ///[putRequest] required "String" url, "Map<String, String>" headers, "String" body
   /// "bool" isDirectUrl (default "false",
   /// switch it "true" if url is direct url like as "https://www.google.com"
-  /// if "false" url will be append as initial "baseUrl" in [NetworkRequests])
+  /// if "false" url will be append as initial "baseUrl" in [NetworkRequestsImplement])
   ///
   /// return response as "String"
   @override
@@ -143,6 +147,36 @@ class NetworkRequests implements NetworkRequestsAbstact {
     try {
       final request = await client!
           .putUrl(_getUri(specificUrl: url, isDirectUrl: isDirectUrl));
+      headers!.forEach((k, v) => request.headers.set(k, v));
+      request.write(body);
+      final response = await request.close();
+      responseJson = await _returnHttpResponse(response);
+    } catch (e) {
+      if (e == SocketException)
+        throw FetchDataException('No Internet connection');
+      else
+        throw FetchDataException(e.toString());
+    }
+    return responseJson;
+  }
+
+  ///[deleteRequest] required "String" url, "Map<String, String>" headers, "String" body
+  /// "bool" isDirectUrl (default "false",
+  /// switch it "true" if url is direct url like as "https://www.google.com"
+  /// if "false" url will be append as initial "baseUrl" in [NetworkRequestsImplement])
+  ///
+  /// return response as "String"
+  @override
+  Future<String> deleteRequest(
+      {@required String? url,
+      @required String? body,
+      @required Map<String, String>? headers,
+      bool isDirectUrl = false}) async {
+    print(_tag + "init put request");
+    var responseJson;
+    try {
+      final request = await client!
+          .deleteUrl(_getUri(specificUrl: url, isDirectUrl: isDirectUrl));
       headers!.forEach((k, v) => request.headers.set(k, v));
       request.write(body);
       final response = await request.close();

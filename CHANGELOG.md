@@ -1,3 +1,7 @@
+## [0.0.1-dev.2] - 22 Jul,2021 Pre-Relased.
+
+* Network Request new delete implements requests
+
 ## [0.0.1-dev.1] - 15 Jul,2021 Pre-Relased.
 
 * Network Request implements as for GET, PUT, POST requests

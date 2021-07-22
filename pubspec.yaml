@@ -1,7 +1,7 @@
 name: flutter_basic_essentials
 description: This Flutter package project is for basic widgets and with some
   basic network funtionalities.
-version: 0.0.1-dev.1
+version: 0.0.1-dev.2
 homepage: https://github.com/arfuhad/flutter_network_requests
 repository: https://github.com/arfuhad/flutter_network_requests.git
 
