@@ -1,6 +1,7 @@
-## [0.0.1-dev.2] - 22 Jul,2021 Pre-Relased.
+## [0.0.2] - 22 Jul,2021 Pre-Relased.
 
 * Network Request new delete implements requests
+* change in github repo update
 
 ## [0.0.1-dev.1] - 15 Jul,2021 Pre-Relased.
 
